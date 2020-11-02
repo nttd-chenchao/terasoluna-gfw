@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Class that outputs the exception information to the log.
@@ -380,10 +380,10 @@ public class ExceptionLogger implements InitializingBean {
 
         String bindingExceptionCode = exceptionCode;
         String bindingExceptionMessage = exceptionMessage;
-        if (StringUtils.isEmpty(bindingExceptionCode)) {
+        if (ObjectUtils.isEmpty(bindingExceptionCode)) {
             bindingExceptionCode = defaultCode;
         }
-        if (StringUtils.isEmpty(bindingExceptionMessage)) {
+        if (ObjectUtils.isEmpty(bindingExceptionMessage)) {
             bindingExceptionMessage = defaultMessage;
         }
 
