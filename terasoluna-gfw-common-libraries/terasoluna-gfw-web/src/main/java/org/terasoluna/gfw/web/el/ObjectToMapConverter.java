@@ -30,7 +30,7 @@ import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Convert {@code Object} to {@code Map<String, String>} using {@link FormattingConversionService}.
@@ -170,7 +170,7 @@ class ObjectToMapConverter {
     private Map<String, String> convert(String prefix, Map<?, ?> value) {
         Map<String, String> map = new LinkedHashMap<String, String>();
         for (Map.Entry<?, ?> e : value.entrySet()) {
-            if (ObjectUtils.isEmpty(prefix)) {
+            if (!StringUtils.hasLength(prefix)) {
                 map.putAll(this.convert(e.getKey().toString(), e.getValue()));
             } else {
                 map.putAll(this.convert(prefix + "[" + e.getKey() + "]", e
@@ -288,7 +288,7 @@ class ObjectToMapConverter {
      */
     private boolean flatten(Map<String, String> map, String prefix, String name,
             Object value, TypeDescriptor sourceType) {
-        String key = ObjectUtils.isEmpty(prefix) ? name : prefix + "." + name;
+        String key = StringUtils.hasLength(prefix) ? prefix + "." + name : name;
         if (value == null) {
             String resetKey = determineResetKey(key, sourceType);
             map.put(resetKey, "");
@@ -297,14 +297,14 @@ class ObjectToMapConverter {
         }
         Class<?> clazz = value.getClass();
         if (value instanceof Iterable) {
-            if (ObjectUtils.isEmpty(name)) {
+            if (!StringUtils.hasLength(name)) {
                 // skip flatten
                 return true;
             }
             Iterable<?> iterable = (Iterable<?>) value;
             map.putAll(this.convert(key, iterable));
         } else if (clazz.isArray()) {
-            if (ObjectUtils.isEmpty(name)) {
+            if (!StringUtils.hasLength(name)) {
                 // skip flatten
                 return true;
             }
